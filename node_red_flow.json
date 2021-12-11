@@ -1,0 +1,206 @@
+[
+    {
+        "id": "8ec29985ea2dab43",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "04caa66d08cd5b88",
+        "type": "rpi-sensehat in",
+        "z": "8ec29985ea2dab43",
+        "name": "Read motion events",
+        "motion": true,
+        "env": false,
+        "stick": false,
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "62f3d6a87fa37a65"
+            ]
+        ]
+    },
+    {
+        "id": "cd55e1875e196954",
+        "type": "debug",
+        "z": "8ec29985ea2dab43",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 850,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "62f3d6a87fa37a65",
+        "type": "function",
+        "z": "8ec29985ea2dab43",
+        "name": "Extract Acceleration",
+        "func": "msg.payload = msg.payload.acceleration;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 300,
+        "wires": [
+            [
+                "1707fd377b136faa"
+            ]
+        ]
+    },
+    {
+        "id": "262b68214d0d9559",
+        "type": "function",
+        "z": "8ec29985ea2dab43",
+        "name": "Send Door Opened Event",
+        "func": "var payload = msg.payload;\nvar door_opened_flag = context.get(\"door_opened\");\nvar door_opened_datetime = context.get(\"door_opened_datetime\");\n\nif (typeof door_opened_flag === \"undefined\") {\n    door_opened_flag = false;\n}\n\nif (typeof door_opened_datetime === \"undefined\") {\n    door_opened_datetime = new Date();\n}\n\nvar z_acceleration = Math.round(Math.abs(msg.payload.z));\n\nvar diff = Math.abs(new Date() - door_opened_datetime);\nvar difference_minutes = Math.floor((diff/1000)/60);\n\nmsg.payload.flag = door_opened_flag;\nmsg.payload.z = z_acceleration;\nmsg.payload.difference_minutes = difference_minutes;\n\nif (z_acceleration >= 1 && !door_opened_flag && difference_minutes > 1) {\n    door_opened_flag = true;\n    door_opened_datetime = new Date()\n    context.set(\"door_opened\", door_opened_flag);\n    return msg;\n}\n\nif(payload < 1 && door_opened_flag) {\n    door_opened_flag = false;\n    door_opened_datetime = new Date()\n    context.set(\"door_opened\", door_opened_flag);\n    return msg;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 710,
+        "y": 380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1707fd377b136faa",
+        "type": "function",
+        "z": "8ec29985ea2dab43",
+        "name": "",
+        "func": "var payload = msg.payload;\n\nvar z_acceleration = msg.payload.z;\n\nif (z_acceleration >= 1) {\n    msg.payload.flag = true;\n} else {\n    msg.payload.flag= false;\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 300,
+        "wires": [
+            [
+                "cd55e1875e196954"
+            ]
+        ]
+    },
+    {
+        "id": "cd815affdd39d9c2",
+        "type": "pythonshell in",
+        "z": "8ec29985ea2dab43",
+        "name": "Run Hue Status",
+        "pyfile": "/home/pi/iot_project/hue_status.py",
+        "virtualenv": "",
+        "continuous": true,
+        "stdInData": false,
+        "x": 160,
+        "y": 560,
+        "wires": [
+            [
+                "739df28ddff8901b"
+            ]
+        ]
+    },
+    {
+        "id": "9dcd2965abcc7413",
+        "type": "ui_table",
+        "z": "8ec29985ea2dab43",
+        "group": "25130fe1.0492b",
+        "name": "",
+        "order": 2,
+        "width": 0,
+        "height": "2",
+        "columns": [
+            {
+                "field": "name",
+                "title": "Name",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            },
+            {
+                "field": "state",
+                "title": "State",
+                "width": "",
+                "align": "left",
+                "formatter": "plaintext",
+                "formatterParams": {
+                    "target": "_blank"
+                }
+            }
+        ],
+        "outputs": 0,
+        "cts": false,
+        "x": 630,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "739df28ddff8901b",
+        "type": "json",
+        "z": "8ec29985ea2dab43",
+        "name": "",
+        "property": "payload",
+        "action": "obj",
+        "pretty": false,
+        "x": 330,
+        "y": 560,
+        "wires": [
+            [
+                "609842db0b9375b7"
+            ]
+        ]
+    },
+    {
+        "id": "609842db0b9375b7",
+        "type": "function",
+        "z": "8ec29985ea2dab43",
+        "name": "",
+        "func": "var payload = msg.payload;\nfor (var i = 0; i < payload.length; i++) {\n    if(payload[i].state) {\n        payload[i].state = \"On\";\n    } else {\n        payload[i].state = \"Off\";\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 560,
+        "wires": [
+            [
+                "9dcd2965abcc7413"
+            ]
+        ]
+    },
+    {
+        "id": "25130fe1.0492b",
+        "type": "ui_group",
+        "name": "Hue Status",
+        "tab": "ed6013cafe1ead89",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ed6013cafe1ead89",
+        "type": "ui_tab",
+        "name": "IoT Project",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
