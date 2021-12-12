@@ -1,0 +1,9 @@
+iot_dashboard:
+  hue:
+    bridge: "xxx"
+    refresh_intervall: 2
+  umbrella_detection:
+    model_dir: "ssd_v3"
+  weather_api:
+    api_key: "xxx"
+    location: "xxx"
