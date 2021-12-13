@@ -1,4 +1,6 @@
 iot_dashboard:
+  mqtt:
+    hostname: "localhost"
   hue:
     bridge: "xxx"
     refresh_intervall: 2
@@ -6,4 +8,7 @@ iot_dashboard:
     model_dir: "ssd_v3"
   weather_api:
     api_key: "xxx"
-    location: "xxx"
+    location: "Thalwil, Switzerland"
+  flower:
+    mac_address: "xxx"
+    refresh_intervall: 10

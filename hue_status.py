@@ -1,8 +1,12 @@
 import json
 import time
 from phue import Bridge
+import paho.mqtt.publish as publish
 import configuration
 
+MQTT_TOPIC = "data/hue"
+
+mqtt_config = configuration.load_configuration("mqtt")
 config = configuration.load_configuration("hue")
 
 b = Bridge(config["bridge"])
@@ -14,6 +18,5 @@ while True:
     for group_key in groups_raw:
         group_obj = groups_raw[group_key]
         groups.append({"name": group_obj["name"], "state": group_obj["state"]["any_on"]})
-    json_string = json.dumps(groups)
-    print(json_string)
+    publish.single(MQTT_TOPIC, json.dumps(groups), hostname=mqtt_config["hostname"])
     time.sleep(config["refresh_intervall"])
