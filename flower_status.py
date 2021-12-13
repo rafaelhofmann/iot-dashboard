@@ -10,7 +10,7 @@ MQTT_TOPIC = "sensor/flower"
 mqtt_config = configuration.load_configuration("mqtt")
 config = configuration.load_configuration("flower")
 
-poller = MiFloraPoller(config["mac_address"], BluepyBackend)
+poller = MiFloraPoller(mac=config["mac_address"], backend=BluepyBackend, retries=3)
 
 while True:
     flower_data = {"temperature": poller.parameter_value(MI_TEMPERATURE), "moisture": poller.parameter_value(MI_MOISTURE)}
