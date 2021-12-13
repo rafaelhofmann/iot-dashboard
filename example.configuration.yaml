@@ -11,4 +11,4 @@ iot_dashboard:
     location: "Thalwil, Switzerland"
   flower:
     mac_address: "xxx"
-    refresh_intervall: 10
+    refresh_intervall: 2
