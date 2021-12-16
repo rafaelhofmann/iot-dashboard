@@ -4,12 +4,12 @@ from phue import Bridge
 import paho.mqtt.publish as publish
 import configuration
 
-MQTT_TOPIC = "data/hue"
+MQTT_TOPIC = "sensor/hue"
 
 mqtt_config = configuration.load_configuration("mqtt")
 config = configuration.load_configuration("hue")
 
-b = Bridge(config["bridge"])
+b = Bridge(ip=config["bridge"], username=config["username"])
 b.connect()
 
 while True:

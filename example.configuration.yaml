@@ -2,13 +2,17 @@ iot_dashboard:
   mqtt:
     hostname: "localhost"
   hue:
-    bridge: "xxx"
+    bridge: "192.168.0.227"
+    username: "xxx"
     refresh_intervall: 2
   umbrella_detection:
     model_dir: "ssd_v3"
   weather_api:
     api_key: "xxx"
-    location: "Thalwil, Switzerland"
+    refresh_intervall: 5
+    location:
+      city: "Thalwil"
+      country: "CH"
   flower:
     mac_address: "xxx"
     refresh_intervall: 2

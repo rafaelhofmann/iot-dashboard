@@ -16,7 +16,7 @@ owm = OWM(config["api_key"])
 mgr = owm.weather_manager()
 
 
-forecast = mgr.forecast_at_place(config["location"], "3h", limit=5).forecast
+forecast = mgr.forecast_at_place("{0}, {1}".format(config["location"]["city"], config["location"]["country"]), "3h", limit=5).forecast
 will_rain = any(check_weather_for_rain(weather) for weather in forecast)
 
 json_string = json.dumps({"will_rain": will_rain})

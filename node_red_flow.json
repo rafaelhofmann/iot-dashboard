@@ -2,7 +2,7 @@
     {
         "id": "8ec29985ea2dab43",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "IoT Dashboard",
         "disabled": false,
         "info": "",
         "env": []
@@ -15,8 +15,8 @@
         "motion": true,
         "env": false,
         "stick": false,
-        "x": 130,
-        "y": 300,
+        "x": 270,
+        "y": 920,
         "wires": [
             [
                 "62f3d6a87fa37a65"
@@ -36,8 +36,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 850,
-        "y": 300,
+        "x": 990,
+        "y": 920,
         "wires": []
     },
     {
@@ -51,8 +51,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
-        "y": 300,
+        "x": 520,
+        "y": 920,
         "wires": [
             [
                 "1707fd377b136faa"
@@ -70,8 +70,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 710,
-        "y": 380,
+        "x": 850,
+        "y": 1000,
         "wires": [
             []
         ]
@@ -87,8 +87,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 640,
-        "y": 300,
+        "x": 780,
+        "y": 920,
         "wires": [
             [
                 "cd55e1875e196954"
@@ -96,31 +96,14 @@
         ]
     },
     {
-        "id": "cd815affdd39d9c2",
-        "type": "pythonshell in",
-        "z": "8ec29985ea2dab43",
-        "name": "Run Hue Status",
-        "pyfile": "/home/pi/iot_project/hue_status.py",
-        "virtualenv": "",
-        "continuous": true,
-        "stdInData": false,
-        "x": 160,
-        "y": 560,
-        "wires": [
-            [
-                "739df28ddff8901b"
-            ]
-        ]
-    },
-    {
         "id": "9dcd2965abcc7413",
         "type": "ui_table",
         "z": "8ec29985ea2dab43",
-        "group": "25130fe1.0492b",
-        "name": "",
-        "order": 2,
+        "group": "37999371ba43323a",
+        "name": "Hue Status Table",
+        "order": 1,
         "width": 0,
-        "height": "2",
+        "height": 0,
         "columns": [
             {
                 "field": "name",
@@ -145,39 +128,23 @@
         ],
         "outputs": 0,
         "cts": false,
-        "x": 630,
-        "y": 560,
+        "x": 830,
+        "y": 500,
         "wires": []
-    },
-    {
-        "id": "739df28ddff8901b",
-        "type": "json",
-        "z": "8ec29985ea2dab43",
-        "name": "",
-        "property": "payload",
-        "action": "obj",
-        "pretty": false,
-        "x": 330,
-        "y": 560,
-        "wires": [
-            [
-                "609842db0b9375b7"
-            ]
-        ]
     },
     {
         "id": "609842db0b9375b7",
         "type": "function",
         "z": "8ec29985ea2dab43",
-        "name": "",
-        "func": "var payload = msg.payload;\nfor (var i = 0; i < payload.length; i++) {\n    if(payload[i].state) {\n        payload[i].state = \"On\";\n    } else {\n        payload[i].state = \"Off\";\n    }\n}\nreturn msg;",
+        "name": "Convert hue data for the ui table",
+        "func": "var payload = msg.payload;\nfor (var i = 0; i < payload.length; i++) {\n    if (payload[i].state) {\n        payload[i].state = \"On\";\n    } else {\n        payload[i].state = \"Off\";\n    }\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 480,
-        "y": 560,
+        "x": 510,
+        "y": 500,
         "wires": [
             [
                 "9dcd2965abcc7413"
@@ -185,11 +152,441 @@
         ]
     },
     {
-        "id": "25130fe1.0492b",
+        "id": "a986d2a531bc6797",
+        "type": "mqtt in",
+        "z": "8ec29985ea2dab43",
+        "name": "Read Hue data",
+        "topic": "sensor/hue",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "dff86ddab56a7b73",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 500,
+        "wires": [
+            [
+                "609842db0b9375b7"
+            ]
+        ]
+    },
+    {
+        "id": "0c1286b8dd9f1dea",
+        "type": "pythonshell in",
+        "z": "8ec29985ea2dab43",
+        "name": "Run Script to produce Hue Status",
+        "pyfile": "/home/pi/iot_project/hue_status.py",
+        "virtualenv": "",
+        "continuous": true,
+        "stdInData": true,
+        "x": 580,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "847fd91b521a825b",
+        "type": "inject",
+        "z": "8ec29985ea2dab43",
+        "name": "Inject Node to start pyhon scripts",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 140,
+        "wires": [
+            [
+                "0c1286b8dd9f1dea",
+                "7191c566ac3e17a5",
+                "07004b28d82e30ff"
+            ]
+        ]
+    },
+    {
+        "id": "7191c566ac3e17a5",
+        "type": "pythonshell in",
+        "z": "8ec29985ea2dab43",
+        "name": "Run Script to produce Flower Status",
+        "pyfile": "/home/pi/iot_project/flower_status.py",
+        "virtualenv": "",
+        "continuous": true,
+        "stdInData": true,
+        "x": 590,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9cd00313c8b42825",
+        "type": "mqtt in",
+        "z": "8ec29985ea2dab43",
+        "name": "Read Flower data",
+        "topic": "sensor/flower",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "dff86ddab56a7b73",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 640,
+        "wires": [
+            [
+                "a4874b93e8663218",
+                "96035fb1791d12e9"
+            ]
+        ]
+    },
+    {
+        "id": "165404d6c96b981d",
+        "type": "inject",
+        "z": "8ec29985ea2dab43",
+        "name": "Inject time for clock",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "15",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 320,
+        "wires": [
+            [
+                "c31625e2d6145dad"
+            ]
+        ]
+    },
+    {
+        "id": "c31625e2d6145dad",
+        "type": "function",
+        "z": "8ec29985ea2dab43",
+        "name": "Convert timestamp to Date object",
+        "func": "var currentDateTime = new Date(msg.payload);\n\nvar correctedMonth = currentDateTime.getMonth() + 1;\n\nvar day = currentDateTime.getDate() < 10 ? '0' + currentDateTime.getDate() : currentDateTime.getDate();\nvar month = correctedMonth < 10 ? '0' + correctedMonth : correctedMonth;\nvar year = currentDateTime.getFullYear();\n\nvar hours = currentDateTime.getHours() < 10 ? '0' + currentDateTime.getHours() : currentDateTime.getHours();\nvar minutes = currentDateTime.getMinutes() < 10 ? '0' + currentDateTime.getMinutes() : currentDateTime.getMinutes();\n\nmsg.payload = {\n    date: day + \".\" + month + \".\" + year,\n    time: hours + \":\" + minutes\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 520,
+        "y": 320,
+        "wires": [
+            [
+                "398eb0df7b8692ae"
+            ]
+        ]
+    },
+    {
+        "id": "398eb0df7b8692ae",
+        "type": "ui_template",
+        "z": "8ec29985ea2dab43",
+        "group": "25130fe1.0492b",
+        "name": "",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "format": "<div style=\"font-size:32px; margin-left: 20px;\">\n    <span ng-bind-html=\"msg.payload.date\"></span>\n    <span ng-bind-html=\"msg.payload.time\"></span>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 800,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4d81870de0e3e46e",
+        "type": "comment",
+        "z": "8ec29985ea2dab43",
+        "name": "Clock",
+        "info": "",
+        "x": 170,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "07c429f688a4785a",
+        "type": "comment",
+        "z": "8ec29985ea2dab43",
+        "name": "Python scripts to generate data",
+        "info": "",
+        "x": 230,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "a0698d2120d1341d",
+        "type": "comment",
+        "z": "8ec29985ea2dab43",
+        "name": "Hue Data",
+        "info": "",
+        "x": 160,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "2ab353abd0ae051e",
+        "type": "ui_svg_graphics",
+        "z": "8ec29985ea2dab43",
+        "group": "d0816bc70fe54235",
+        "order": 1,
+        "width": "6",
+        "height": "7",
+        "svgString": "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n<!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->\n<svg version=\"1.1\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\n\t viewBox=\"0 0 511.998 511.998\" style=\"enable-background:new 0 0 511.998 511.998;\" xml:space=\"preserve\">\n<path style=\"fill:#23A24D;\" class=\"leaf\" d=\"M256,80.332c0-161.271,213.105,0,213.105,0S256,241.603,256,80.332z\"/>\n<path style=\"fill:#43B05C;\" class=\"leaf\" d=\"M256,80.332c0,161.271-213.105,0-213.105,0S256-80.939,256,80.332z\"/>\n<polygon style=\"fill:#704324;\" points=\"388.469,307.515 388.469,365.118 353.909,365.118 158.09,365.118 123.53,365.118 \n\t123.53,307.515 \"/>\n<rect x=\"158.086\" y=\"365.122\" style=\"fill:#A26234;\" width=\"195.819\" height=\"138.227\"/>\n<path d=\"M474.328,73.431c-1.309-0.989-32.469-24.465-71.395-44.738c-53.992-28.116-94.95-35.614-121.747-22.29\n\tc-11.128,5.534-19.533,14.44-25.186,26.622c-5.652-12.183-14.058-21.088-25.186-26.622c-26.796-13.327-67.758-5.825-121.746,22.291\n\tC70.141,48.965,38.98,72.442,37.672,73.431l-9.119,6.9l9.119,6.9c1.307,0.989,32.469,24.465,71.395,44.738\n\tc36.689,19.108,67.36,28.692,91.66,28.692c11.458,0,21.5-2.131,30.086-6.402c6.419-3.192,11.929-7.51,16.532-12.926v157.524H114.876\n\tv74.912h34.56v138.227h213.128V373.77h34.56v-74.912H264.654V141.336c4.602,5.415,10.113,9.733,16.531,12.925\n\tc8.587,4.271,18.626,6.402,30.087,6.402c24.298,0,54.974-9.588,91.66-28.693c38.925-20.272,70.086-43.748,71.394-44.738l9.119-6.9\n\tL474.328,73.431z M345.255,494.691H166.744v-74.843h95.012V402.54h-95.012v-28.767h178.511V494.691z M379.815,356.463h-247.63\n\tv-40.295h247.63V356.463z M223.111,138.761c-21.224,10.562-57.828,2.939-105.851-22.039c-25.188-13.102-47.464-27.931-59.556-36.391\n\tc12.048-8.433,34.217-23.193,59.357-36.286C165.181,18.987,201.85,11.328,223.105,21.9c14.521,7.221,22.577,23.949,24.006,49.778\n\th-45.82V40.014h-17.309v31.663h-54.696v17.309h31.663v25.905h17.309V88.987h68.851C245.682,114.81,237.628,131.538,223.111,138.761z\n\t M394.74,116.722c-48.022,24.978-84.625,32.6-105.852,22.039c-14.517-7.222-22.571-23.95-24-49.774h45.807v31.663h17.309V88.987\n\th54.707V71.678h-31.662V45.773H333.74v25.905h-68.852c1.429-25.825,9.483-42.552,24-49.775c6.206-3.087,13.725-4.62,22.46-4.62\n\tc21.143,0,49.409,8.984,83.393,26.66c25.188,13.1,47.462,27.929,59.554,36.39C442.202,88.793,419.928,103.621,394.74,116.722z\"/>\n<rect x=\"279.04\" y=\"402.543\" width=\"23.032\" height=\"17.309\"/>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n<g>\n</g>\n</svg>\n",
+        "clickableShapes": [],
+        "javascriptHandlers": [],
+        "smilAnimations": [],
+        "bindings": [],
+        "showCoordinates": false,
+        "autoFormatAfterEdit": false,
+        "showBrowserErrors": false,
+        "showBrowserEvents": false,
+        "enableJsDebugging": false,
+        "sendMsgWhenLoaded": false,
+        "noClickWhenDblClick": false,
+        "outputField": "payload",
+        "editorUrl": "//drawsvg.org/drawsvg.html",
+        "directory": "",
+        "panning": "disabled",
+        "zooming": "disabled",
+        "panOnlyWhenZoomed": false,
+        "doubleClickZoomEnabled": false,
+        "mouseWheelZoomEnabled": false,
+        "dblClickZoomPercentage": 150,
+        "name": "Plant Status Graphic",
+        "x": 840,
+        "y": 600,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a4874b93e8663218",
+        "type": "function",
+        "z": "8ec29985ea2dab43",
+        "name": "Prepare data for SVG graphic",
+        "func": "var colorValue;\nif (msg.payload.moisture >= 10) {\n    colorValue = \"#23A24D\";\n} else {\n    colorValue = \"#964B00\";\n}\n\nmsg.payload = {\n    \"command\": \"update_style\",\n    \"selector\": \".leaf\",\n    \"attributeName\": \"fill\",\n    \"attributeValue\": colorValue\n}\nmsg.topic = \"\";\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 600,
+        "wires": [
+            [
+                "2ab353abd0ae051e"
+            ]
+        ]
+    },
+    {
+        "id": "96fd5cce65a140f0",
+        "type": "ui_template",
+        "z": "8ec29985ea2dab43",
+        "group": "d0816bc70fe54235",
+        "name": "Plant Data Table",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n    div.plant-data-table table {\n        border-collapse: separate;\n        border-spacing: 20px 0;\n    }\n\n    div.plant-data-table th {\n        text-align: left;\n    }\n    \n    div.plant-data-table th,\n    div.plant-data-table td {\n        padding: 5px 0;\n    }\n</style>\n\n<div class=\"plant-data-table\" ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 820,
+        "y": 680,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "96035fb1791d12e9",
+        "type": "template",
+        "z": "8ec29985ea2dab43",
+        "name": "Prepate data for for plant data table",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<table>\n    <tr>\n        <th>Temperature</th>\n        <td>{{payload.temperature}}°</td>\n    </tr>\n    <tr>\n        <th>Light</th>\n        <td>{{payload.light}} Lux</td>\n    </tr>\n    <tr>\n        <th>Moisture</th>\n        <td>{{payload.moisture}}%</td>\n    </tr>\n</table>",
+        "output": "str",
+        "x": 520,
+        "y": 680,
+        "wires": [
+            [
+                "96fd5cce65a140f0"
+            ]
+        ]
+    },
+    {
+        "id": "2d146233ad078747",
+        "type": "comment",
+        "z": "8ec29985ea2dab43",
+        "name": "Flower Data",
+        "info": "",
+        "x": 170,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "b3394c3077a2dd42",
+        "type": "mqtt in",
+        "z": "8ec29985ea2dab43",
+        "name": "Read Weather Forecast",
+        "topic": "data/weather",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "dff86ddab56a7b73",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 800,
+        "wires": [
+            [
+                "63bd5329e7fa9073"
+            ]
+        ]
+    },
+    {
+        "id": "63bd5329e7fa9073",
+        "type": "template",
+        "z": "8ec29985ea2dab43",
+        "name": "Prepare weather forecast table",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<table>\n    <tr>\n        <th>Date</th>\n        <th>Temperature</th>\n        <th>Details</th>\n    </tr>\n    {{#payload}}\n    <tr>\n        <th>{{date_formatted}}</th>\n        <td>{{min_emperature}}° / {{max_temperature}}°</td>\n        <td>{{detailed_status}}</td>\n    </tr>\n    {{/payload}}\n</table>",
+        "output": "str",
+        "x": 510,
+        "y": 800,
+        "wires": [
+            [
+                "4b88d2d66bd0cf0b"
+            ]
+        ]
+    },
+    {
+        "id": "4b88d2d66bd0cf0b",
+        "type": "ui_template",
+        "z": "8ec29985ea2dab43",
+        "group": "25130fe1.0492b",
+        "name": "Weather forecast table",
+        "order": 1,
+        "width": "0",
+        "height": "4",
+        "format": "<style>\n    div.weather-forecast-table table {\n        border-collapse: separate;\n        border-spacing: 20px 0;\n    }\n\n    div.weather-forecast-table th {\n        text-align: left;\n    }\n    \n    div.weather-forecast-table th,\n    div.weather-forecast-table td {\n        padding: 5px 0;\n    }\n</style>\n\n<div class=\"weather-forecast-table\" ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 840,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "07004b28d82e30ff",
+        "type": "pythonshell in",
+        "z": "8ec29985ea2dab43",
+        "name": "Run Script to produce weather forecast",
+        "pyfile": "/home/pi/iot_project/weather_forecast.py",
+        "virtualenv": "",
+        "continuous": true,
+        "stdInData": true,
+        "x": 600,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "37999371ba43323a",
         "type": "ui_group",
         "name": "Hue Status",
         "tab": "ed6013cafe1ead89",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "dff86ddab56a7b73",
+        "type": "mqtt-broker",
+        "name": "Local Broker",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "25130fe1.0492b",
+        "type": "ui_group",
+        "name": "Time",
+        "tab": "ed6013cafe1ead89",
         "order": 1,
+        "disp": false,
+        "width": "8",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "d0816bc70fe54235",
+        "type": "ui_group",
+        "name": "Flower",
+        "tab": "ed6013cafe1ead89",
+        "order": 3,
         "disp": true,
         "width": "6",
         "collapse": false,
