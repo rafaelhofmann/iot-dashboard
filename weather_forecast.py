@@ -17,7 +17,7 @@ reg = owm.city_id_registry()
 location_coordinates = reg.locations_for(config["location"]["city"], country=config["location"]["country"])[0]
 
 while True:
-    forecast = mgr.one_call(lat=location_coordinates.lat, lon=location_coordinates.lon, limit=3)
+    forecast = mgr.one_call(lat=location_coordinates.lat, lon=location_coordinates.lon)
 
     forecasts = []
     for weather in forecast.forecast_daily[:5]:
