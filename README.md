@@ -28,6 +28,16 @@ JSON format:
 }
 ```
 
+### room_monitor.py
+Reads the data from one Xiaomi Temperature and Humidity monitor 2 and publishes the `temperature` and `humidity` data as a JSON object to a message queue in the topic `sensor/room`.
+JSON format:
+```json
+{
+  "temperature": 26.2,
+  "humidity": 42,
+}
+```
+
 ### hue_status.py
 Reads the data from Philipps Hue light system and publishes the light groups with their `name` and `state` (`on`/`off`) data as a JSON object to a message queue in the topic `sensor/hue`.
 JSON format:
@@ -65,7 +75,7 @@ JSON format:
 }
 ```
 
-### weather_forecast
+### weather_forecast.py
 Reads the weather data from `pyowm` and gets the forecast for the next 5 days. The output will be written to `stdout` for further processing in node-red.
 JSON format:
 ```json
@@ -93,9 +103,10 @@ JSON format:
 The following libraries were used for this project.
 | Library | Use case |
 | ------- | -------- |
+|`bluepy`|Python library to interface with the bluetooth system on Linux.|
 |`pyowm`|Library to read weather information from OpenWeatherMap (OWM). Used to check for rain and get the weather forecast.|
 |`phue`|Used to read the data from the Philipps Hue light system.|
 |`miflora`|Used to read sensor data from the Xiaomi Miflora plant sensor.|
 |`tensorflow`|AI library to run object recognition on a webcam image with the aim to detect if an umbrella is present or not.|
-|`numpy`|Used to transform the image for `tensorflow`|
-|`opencv`|Fetch the picture from the attached webcam| 
+|`numpy`|Used to transform the image for `tensorflow`.|
+|`opencv`|Fetch the picture from the attached webcam.| 

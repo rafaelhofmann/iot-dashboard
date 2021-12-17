@@ -16,3 +16,6 @@ iot_dashboard:
   flower:
     mac_address: "xxx"
     refresh_intervall: 2
+  room_monitor:
+    mac_address: "xxx"
+    refresh_intervall: 2
