@@ -1,7 +1,6 @@
 # IOT Dashboard
 ## Problem to solve
 
-
 ## Devices
 ### Philipps Hue
 
