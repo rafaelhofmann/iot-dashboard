@@ -1,6 +1,8 @@
 # IOT Dashboard
+## Problem to solve
 
-## Sensors
+
+## Devices
 ### Philipps Hue
 
 ### Xiaomi Miflora
