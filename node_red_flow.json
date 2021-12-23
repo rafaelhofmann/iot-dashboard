@@ -559,6 +559,195 @@
         "wires": []
     },
     {
+        "id": "9b28b7a1358a5228",
+        "type": "mqtt in",
+        "z": "79444f954799b4fc",
+        "name": "Wait for someone to leave the flat",
+        "topic": "sensor/hue/motion",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "67096fdec282d089",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 1240,
+        "wires": [
+            [
+                "a930a1ef68fff400"
+            ]
+        ]
+    },
+    {
+        "id": "2961a3f76ce82ff7",
+        "type": "comment",
+        "z": "79444f954799b4fc",
+        "name": "Umbrella Reminder",
+        "info": "",
+        "x": 190,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "c6cb86693d59647a",
+        "type": "pythonshell in",
+        "z": "79444f954799b4fc",
+        "name": "Execute rain check",
+        "pyfile": "/home/pi/iot_project/rain_check.py",
+        "virtualenv": "",
+        "continuous": false,
+        "stdInData": false,
+        "x": 870,
+        "y": 1200,
+        "wires": [
+            [
+                "117256a1a73a2e7e"
+            ]
+        ]
+    },
+    {
+        "id": "117256a1a73a2e7e",
+        "type": "json",
+        "z": "79444f954799b4fc",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1090,
+        "y": 1200,
+        "wires": [
+            [
+                "b4d0ddbcfdfb7cf5"
+            ]
+        ]
+    },
+    {
+        "id": "b4d0ddbcfdfb7cf5",
+        "type": "function",
+        "z": "79444f954799b4fc",
+        "name": "Check for rain",
+        "func": "if (msg.payload.will_rain) {\n    msg.topic = \"rain_check\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 1200,
+        "wires": [
+            [
+                "78480904fe88ded3"
+            ]
+        ]
+    },
+    {
+        "id": "0b9b9cfa7fa628cf",
+        "type": "pythonshell in",
+        "z": "79444f954799b4fc",
+        "name": "Execute umbrella detection",
+        "pyfile": "/home/pi/iot_project/umbrella_detection.py",
+        "virtualenv": "",
+        "continuous": false,
+        "stdInData": false,
+        "x": 900,
+        "y": 1280,
+        "wires": [
+            [
+                "9d3ead6e17bdf13a"
+            ]
+        ]
+    },
+    {
+        "id": "78480904fe88ded3",
+        "type": "function",
+        "z": "79444f954799b4fc",
+        "name": "Wait for both inputs",
+        "func": "context.data = context.data || {};\n\nswitch (msg.topic) {\n    case \"umbrella_detection\":\n        context.data.umbrella_detection = msg.payload;\n        break;\n    case \"rain_check\":\n        context.data.rain_check = msg.payload;\n        break;\n}\n\nif (context.data.umbrella_detection != null && context.data.rain_check != null) {\n    context.data.umbrella_detection = null;\n    context.data.rain_check = null;\n    return {\n        payload: {\n            \"send_umbrella_reminder\": true\n        }\n    };\n}\n\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1510,
+        "y": 1240,
+        "wires": [
+            [
+                "b0065fb8fc75527b"
+            ]
+        ]
+    },
+    {
+        "id": "9d3ead6e17bdf13a",
+        "type": "json",
+        "z": "79444f954799b4fc",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 1090,
+        "y": 1280,
+        "wires": [
+            [
+                "794aa93c452b0808"
+            ]
+        ]
+    },
+    {
+        "id": "794aa93c452b0808",
+        "type": "function",
+        "z": "79444f954799b4fc",
+        "name": "Check for an umbrella",
+        "func": "if (msg.payload.umbrella_detected) {\n    msg.topic = \"umbrella_detection\";\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1280,
+        "y": 1280,
+        "wires": [
+            [
+                "78480904fe88ded3"
+            ]
+        ]
+    },
+    {
+        "id": "b0065fb8fc75527b",
+        "type": "pythonshell in",
+        "z": "79444f954799b4fc",
+        "name": "Send Umbrella Reminder",
+        "pyfile": "/home/pi/iot_project/send_umbrella_reminder.py",
+        "virtualenv": "",
+        "continuous": false,
+        "stdInData": false,
+        "x": 1790,
+        "y": 1240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a930a1ef68fff400",
+        "type": "function",
+        "z": "79444f954799b4fc",
+        "name": "Memory function to reduce notifications",
+        "func": "var notificationDate = context.get(\"notification_date\");\n\nif (typeof (notificationDate) === 'undefined') {\n    context.set(\"notification_date\", new Date());\n    return msg;\n}\n\nvar currentDate = new Date();\nvar diff = Math.abs(notificationDate - currentDate);\nvar differenceInMinutes = Math.floor((diff / 1000) / 60);\n\nif (differenceInMinutes >= 5) {\n    context.set(\"notification_date\", currentDate);\n    return msg;\n} else {\n    return null;\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 1240,
+        "wires": [
+            [
+                "0b9b9cfa7fa628cf",
+                "c6cb86693d59647a"
+            ]
+        ]
+    },
+    {
         "id": "8a2c35730178a731",
         "type": "ui_group",
         "name": "Hue Status",

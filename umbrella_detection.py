@@ -49,12 +49,16 @@ config = configuration.load_configuration("umbrella_detection")
 MODEL_DIR = config["model_dir"]
 MODEL_NAME = "model.tflite"
 LABELMAP_NAME = "labelmap.txt"
-THRESHOLD = 0.5
-CAMERA_WIDTH = 1280
-CAMERA_HEIGHT = 720
+THRESHOLD = 0.4
+CAMERA_WIDTH = 1920
+CAMERA_HEIGHT = 1080
 CAMERA_FRAME_RATE = 30
-INTERESTING_LABELS = ["umbrella"]
 
+# Because any COCO dataset is mainly trained with open umbrellas and not closed, we do have some slight issues here,
+# as our umbrella at home will always be closed.
+# So we become really (really) generous with what labels we accept as an umbrella.
+# Of course this increases the rate of error and we might recognize things as an umbrella that is really not an umbrella.
+UMBRELLA_LABELS = ["umbrella", "tie", "vase", "suitcase"]
 
 CWD_PATH = os.getcwd()
 MODEL_PATH = os.path.join(CWD_PATH, MODEL_DIR, MODEL_NAME)
@@ -78,9 +82,6 @@ output_details = interpreter.get_output_details()
 height = input_details[0]["shape"][1]
 width = input_details[0]["shape"][2]
 
-input_mean = 127.5
-input_std = 127.5
-
 # Initialize video stream
 videostream = VideoStream(resolution=(CAMERA_WIDTH, CAMERA_HEIGHT), framerate=CAMERA_FRAME_RATE).start()
 time.sleep(1)
@@ -90,6 +91,7 @@ original_frame = videostream.read()
 
 # Acquire frame and resize to expected shape [1xHxWx3]
 frame = original_frame.copy()
+# frame = cv2.imread("test_umbrella.jpg")
 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 frame_resized = cv2.resize(frame_rgb, (width, height))
 input_data = np.expand_dims(frame_resized, axis=0)
@@ -106,37 +108,8 @@ scores = interpreter.get_tensor(output_details[2]["index"])[0]
 
 def has_found_object(i):
     label_name = labels[int(classes[i])]
-    return label_name in INTERESTING_LABELS and scores[i] >= THRESHOLD
+    return label_name in UMBRELLA_LABELS and scores[i] >= THRESHOLD
 
-
-# Loop over all detections
-# TODO: Remove loop
-for i in range(len(scores)):
-    if has_found_object(i):
-        ymin = int(max(1, (boxes[i][0] * CAMERA_HEIGHT)))
-        xmin = int(max(1, (boxes[i][1] * CAMERA_WIDTH)))
-        ymax = int(min(CAMERA_HEIGHT, (boxes[i][2] * CAMERA_HEIGHT)))
-        xmax = int(min(CAMERA_WIDTH, (boxes[i][3] * CAMERA_WIDTH)))
-
-        cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), (10, 255, 0), 2)
-
-        confidence_percentage = int(scores[i] * 100)
-
-        # Example: 'person: 72%'
-        label_name = labels[int(classes[i])]
-        label = "%s: %d%%" % (label_name, confidence_percentage)
-        labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.7, 2)  # Get font size
-        # Make sure not to draw label too close to top of window
-        label_ymin = max(ymin, labelSize[1] + 10)
-        # Draw white box to put label text in
-        cv2.rectangle(frame, (xmin, label_ymin - labelSize[1] - 10), (xmin + labelSize[0], label_ymin + baseLine - 10), (255, 255, 255), cv2.FILLED)
-        cv2.putText(frame, label, (xmin, label_ymin - 7), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)  # Draw label text
-
-        # Print info
-        print("Object " + str(i) + ": " + label_name + " with confidence " + str(int(scores[i] * 100)))
-
-# TODO: Remove me
-cv2.imwrite("test.jpg", frame)
 
 found_results = any(has_found_object(i) for i in range(len(scores)))
 json_string = json.dumps({"umbrella_detected": found_results})
