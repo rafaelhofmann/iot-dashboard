@@ -38,8 +38,8 @@ JSON format:
 }
 ```
 
-### hue_status.py
-Reads the data from Philipps Hue light system and publishes the light groups with their `name` and `state` (`on`/`off`) data as a JSON object to a message queue in the topic `sensor/hue`.
+### hue_light_status.py
+Reads the data from Philipps Hue light system and publishes the light groups with their `name` and `state` (`on`/`off`) data as a JSON object to a message queue in the topic `sensor/hue/light`.
 JSON format:
 ```json
 [
@@ -52,6 +52,15 @@ JSON format:
     "state": false
   }
 ]
+```
+
+### hue_motion_sensor.py
+Reads the motion sensor data from the Philipps Hue bridge and publishes the sensor information to MQTT with the information `presence_detected` to the topic `sensor/hue/motion`.
+**The event will only be published when presence is detected. Otherwhise nothing will be sent.**
+```json
+{
+    "presence_detected": true
+}
 ```
 
 ### node_red_flow.json
@@ -112,3 +121,4 @@ The following libraries were used for this project.
 |`numpy`|1.16.2|Used to transform the image for `tensorflow`.|
 |`opencv`|4.1.0.25|Fetch the picture from the attached webcam.| 
 |`paho_mqtt`|1.6.1|MQTT library for Python|
+|`requests`|2.21.0|Library to execute HTTP requests|

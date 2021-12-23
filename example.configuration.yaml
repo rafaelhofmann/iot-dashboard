@@ -2,20 +2,29 @@ iot_dashboard:
   mqtt:
     hostname: "localhost"
   hue:
-    bridge: "192.168.0.227"
-    username: "xxx"
+    bridge: "x"
+    username: "x"
+  hue_light:
+    topic: "sensor/hue/light"
+    refresh_intervall: 2
+  hue_motion:
+    topic: "sensor/hue/motion"
+    motion_sensor_id: -1
     refresh_intervall: 2
   umbrella_detection:
     model_dir: "ssd_v3"
   weather_api:
-    api_key: "xxx"
+    api_key: "x"
+    topic: "data/weather"
     refresh_intervall: 5
     location:
-      city: "Thalwil"
-      country: "CH"
+      city: "x"
+      country: "x"
   flower:
-    mac_address: "xxx"
+    mac_address: "x"
+    topic: "sensor/flower"
     refresh_intervall: 2
   room_monitor:
-    mac_address: "xxx"
+    mac_address: "x"
+    topic: "sensor/room"
     refresh_intervall: 2

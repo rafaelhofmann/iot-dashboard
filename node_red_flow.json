@@ -1,6 +1,6 @@
 [
     {
-        "id": "8ec29985ea2dab43",
+        "id": "79444f954799b4fc",
         "type": "tab",
         "label": "IoT Dashboard",
         "disabled": false,
@@ -8,98 +8,10 @@
         "env": []
     },
     {
-        "id": "04caa66d08cd5b88",
-        "type": "rpi-sensehat in",
-        "z": "8ec29985ea2dab43",
-        "name": "Read motion events",
-        "motion": true,
-        "env": false,
-        "stick": false,
-        "x": 270,
-        "y": 920,
-        "wires": [
-            [
-                "62f3d6a87fa37a65"
-            ]
-        ]
-    },
-    {
-        "id": "cd55e1875e196954",
-        "type": "debug",
-        "z": "8ec29985ea2dab43",
-        "name": "",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 990,
-        "y": 920,
-        "wires": []
-    },
-    {
-        "id": "62f3d6a87fa37a65",
-        "type": "function",
-        "z": "8ec29985ea2dab43",
-        "name": "Extract Acceleration",
-        "func": "msg.payload = msg.payload.acceleration;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 520,
-        "y": 920,
-        "wires": [
-            [
-                "1707fd377b136faa"
-            ]
-        ]
-    },
-    {
-        "id": "262b68214d0d9559",
-        "type": "function",
-        "z": "8ec29985ea2dab43",
-        "name": "Send Door Opened Event",
-        "func": "var payload = msg.payload;\nvar door_opened_flag = context.get(\"door_opened\");\nvar door_opened_datetime = context.get(\"door_opened_datetime\");\n\nif (typeof door_opened_flag === \"undefined\") {\n    door_opened_flag = false;\n}\n\nif (typeof door_opened_datetime === \"undefined\") {\n    door_opened_datetime = new Date();\n}\n\nvar z_acceleration = Math.round(Math.abs(msg.payload.z));\n\nvar diff = Math.abs(new Date() - door_opened_datetime);\nvar difference_minutes = Math.floor((diff/1000)/60);\n\nmsg.payload.flag = door_opened_flag;\nmsg.payload.z = z_acceleration;\nmsg.payload.difference_minutes = difference_minutes;\n\nif (z_acceleration >= 1 && !door_opened_flag && difference_minutes > 1) {\n    door_opened_flag = true;\n    door_opened_datetime = new Date()\n    context.set(\"door_opened\", door_opened_flag);\n    return msg;\n}\n\nif(payload < 1 && door_opened_flag) {\n    door_opened_flag = false;\n    door_opened_datetime = new Date()\n    context.set(\"door_opened\", door_opened_flag);\n    return msg;\n}\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 850,
-        "y": 1000,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "1707fd377b136faa",
-        "type": "function",
-        "z": "8ec29985ea2dab43",
-        "name": "",
-        "func": "var payload = msg.payload;\n\nvar z_acceleration = msg.payload.z;\n\nif (z_acceleration >= 1) {\n    msg.payload.flag = true;\n} else {\n    msg.payload.flag= false;\n}\n\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 780,
-        "y": 920,
-        "wires": [
-            [
-                "cd55e1875e196954"
-            ]
-        ]
-    },
-    {
-        "id": "9dcd2965abcc7413",
+        "id": "bcb1758c5e357b07",
         "type": "ui_table",
-        "z": "8ec29985ea2dab43",
-        "group": "37999371ba43323a",
+        "z": "79444f954799b4fc",
+        "group": "8a2c35730178a731",
         "name": "Hue Status Table",
         "order": 1,
         "width": 0,
@@ -129,13 +41,13 @@
         "outputs": 0,
         "cts": false,
         "x": 830,
-        "y": 500,
+        "y": 680,
         "wires": []
     },
     {
-        "id": "609842db0b9375b7",
+        "id": "50227ff9333b7b56",
         "type": "function",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Convert hue data for the ui table",
         "func": "var payload = msg.payload;\nfor (var i = 0; i < payload.length; i++) {\n    if (payload[i].state) {\n        payload[i].state = \"On\";\n    } else {\n        payload[i].state = \"Off\";\n    }\n}\nreturn msg;",
         "outputs": 1,
@@ -144,53 +56,53 @@
         "finalize": "",
         "libs": [],
         "x": 510,
-        "y": 500,
+        "y": 680,
         "wires": [
             [
-                "9dcd2965abcc7413"
+                "bcb1758c5e357b07"
             ]
         ]
     },
     {
-        "id": "a986d2a531bc6797",
+        "id": "f75fb5491fc74f5b",
         "type": "mqtt in",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Read Hue data",
-        "topic": "sensor/hue",
+        "topic": "sensor/hue/light",
         "qos": "2",
         "datatype": "json",
-        "broker": "dff86ddab56a7b73",
+        "broker": "67096fdec282d089",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
         "x": 180,
-        "y": 500,
+        "y": 680,
         "wires": [
             [
-                "609842db0b9375b7"
+                "50227ff9333b7b56"
             ]
         ]
     },
     {
-        "id": "0c1286b8dd9f1dea",
+        "id": "0b80a4a5a01f341c",
         "type": "pythonshell in",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Run Script to produce Hue Status",
-        "pyfile": "/home/pi/iot_project/hue_status.py",
+        "pyfile": "/home/pi/iot_project/hue_light_status.py",
         "virtualenv": "",
         "continuous": true,
         "stdInData": true,
         "x": 580,
-        "y": 140,
+        "y": 100,
         "wires": [
             []
         ]
     },
     {
-        "id": "847fd91b521a825b",
+        "id": "0154c3affbf9ce58",
         "type": "inject",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Inject Node to start pyhon scripts",
         "props": [
             {
@@ -207,57 +119,59 @@
         "onceDelay": 0.1,
         "topic": "",
         "payloadType": "date",
-        "x": 240,
-        "y": 140,
+        "x": 220,
+        "y": 160,
         "wires": [
             [
-                "0c1286b8dd9f1dea",
-                "7191c566ac3e17a5",
-                "07004b28d82e30ff"
+                "0b80a4a5a01f341c",
+                "3772d358c25d2c97",
+                "3e01e9ba38244e81",
+                "9ea17bfb13273d9b",
+                "876c825e381e69cb"
             ]
         ]
     },
     {
-        "id": "7191c566ac3e17a5",
+        "id": "3772d358c25d2c97",
         "type": "pythonshell in",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Run Script to produce Flower Status",
         "pyfile": "/home/pi/iot_project/flower_status.py",
         "virtualenv": "",
         "continuous": true,
         "stdInData": true,
         "x": 590,
-        "y": 200,
+        "y": 160,
         "wires": [
             []
         ]
     },
     {
-        "id": "9cd00313c8b42825",
+        "id": "9e5795e8f7bcf36f",
         "type": "mqtt in",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Read Flower data",
         "topic": "sensor/flower",
         "qos": "2",
         "datatype": "json",
-        "broker": "dff86ddab56a7b73",
+        "broker": "67096fdec282d089",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
         "x": 180,
-        "y": 640,
+        "y": 820,
         "wires": [
             [
-                "a4874b93e8663218",
-                "96035fb1791d12e9"
+                "af76131e58a944c2",
+                "3f9f1d4ef71b147e"
             ]
         ]
     },
     {
-        "id": "165404d6c96b981d",
+        "id": "b44f2349b03c1b0b",
         "type": "inject",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Inject time for clock",
         "props": [
             {
@@ -274,18 +188,18 @@
         "onceDelay": 0.1,
         "topic": "",
         "payloadType": "date",
-        "x": 220,
-        "y": 320,
+        "x": 200,
+        "y": 460,
         "wires": [
             [
-                "c31625e2d6145dad"
+                "f180849ffb47d17a"
             ]
         ]
     },
     {
-        "id": "c31625e2d6145dad",
+        "id": "f180849ffb47d17a",
         "type": "function",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Convert timestamp to Date object",
         "func": "var currentDateTime = new Date(msg.payload);\n\nvar correctedMonth = currentDateTime.getMonth() + 1;\n\nvar day = currentDateTime.getDate() < 10 ? '0' + currentDateTime.getDate() : currentDateTime.getDate();\nvar month = correctedMonth < 10 ? '0' + correctedMonth : correctedMonth;\nvar year = currentDateTime.getFullYear();\n\nvar hours = currentDateTime.getHours() < 10 ? '0' + currentDateTime.getHours() : currentDateTime.getHours();\nvar minutes = currentDateTime.getMinutes() < 10 ? '0' + currentDateTime.getMinutes() : currentDateTime.getMinutes();\n\nmsg.payload = {\n    date: day + \".\" + month + \".\" + year,\n    time: hours + \":\" + minutes\n}\nreturn msg;",
         "outputs": 1,
@@ -294,19 +208,19 @@
         "finalize": "",
         "libs": [],
         "x": 520,
-        "y": 320,
+        "y": 460,
         "wires": [
             [
-                "398eb0df7b8692ae"
+                "3392a4139f80abc6"
             ]
         ]
     },
     {
-        "id": "398eb0df7b8692ae",
+        "id": "3392a4139f80abc6",
         "type": "ui_template",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "group": "25130fe1.0492b",
-        "name": "",
+        "name": "Date / Time",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -316,47 +230,47 @@
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 800,
-        "y": 320,
+        "x": 810,
+        "y": 460,
         "wires": [
             []
         ]
     },
     {
-        "id": "4d81870de0e3e46e",
+        "id": "fbc2e49350896ff8",
         "type": "comment",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Clock",
         "info": "",
-        "x": 170,
-        "y": 280,
+        "x": 150,
+        "y": 420,
         "wires": []
     },
     {
-        "id": "07c429f688a4785a",
+        "id": "d88fc9961f351ac1",
         "type": "comment",
-        "z": "8ec29985ea2dab43",
-        "name": "Python scripts to generate data",
+        "z": "79444f954799b4fc",
+        "name": "Start all Python scripts to generate data",
         "info": "",
         "x": 230,
-        "y": 80,
+        "y": 120,
         "wires": []
     },
     {
-        "id": "a0698d2120d1341d",
+        "id": "0126be1c0bde12e5",
         "type": "comment",
-        "z": "8ec29985ea2dab43",
-        "name": "Hue Data",
+        "z": "79444f954799b4fc",
+        "name": "Hue Light Data",
         "info": "",
-        "x": 160,
-        "y": 460,
+        "x": 180,
+        "y": 640,
         "wires": []
     },
     {
-        "id": "2ab353abd0ae051e",
+        "id": "e0287394654f936b",
         "type": "ui_svg_graphics",
-        "z": "8ec29985ea2dab43",
-        "group": "d0816bc70fe54235",
+        "z": "79444f954799b4fc",
+        "group": "86c81e86f697bdae",
         "order": 1,
         "width": "6",
         "height": "7",
@@ -383,15 +297,15 @@
         "dblClickZoomPercentage": 150,
         "name": "Plant Status Graphic",
         "x": 840,
-        "y": 600,
+        "y": 780,
         "wires": [
             []
         ]
     },
     {
-        "id": "a4874b93e8663218",
+        "id": "af76131e58a944c2",
         "type": "function",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Prepare data for SVG graphic",
         "func": "var colorValue;\nif (msg.payload.moisture >= 10) {\n    colorValue = \"#23A24D\";\n} else {\n    colorValue = \"#964B00\";\n}\n\nmsg.payload = {\n    \"command\": \"update_style\",\n    \"selector\": \".leaf\",\n    \"attributeName\": \"fill\",\n    \"attributeValue\": colorValue\n}\nmsg.topic = \"\";\nreturn msg;",
         "outputs": 1,
@@ -400,18 +314,18 @@
         "finalize": "",
         "libs": [],
         "x": 510,
-        "y": 600,
+        "y": 780,
         "wires": [
             [
-                "2ab353abd0ae051e"
+                "e0287394654f936b"
             ]
         ]
     },
     {
-        "id": "96fd5cce65a140f0",
+        "id": "5884e92d2492ed4e",
         "type": "ui_template",
-        "z": "8ec29985ea2dab43",
-        "group": "d0816bc70fe54235",
+        "z": "79444f954799b4fc",
+        "group": "86c81e86f697bdae",
         "name": "Plant Data Table",
         "order": 1,
         "width": 0,
@@ -423,15 +337,15 @@
         "templateScope": "local",
         "className": "",
         "x": 820,
-        "y": 680,
+        "y": 860,
         "wires": [
             []
         ]
     },
     {
-        "id": "96035fb1791d12e9",
+        "id": "3f9f1d4ef71b147e",
         "type": "template",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Prepate data for for plant data table",
         "field": "payload",
         "fieldType": "msg",
@@ -440,48 +354,48 @@
         "template": "<table>\n    <tr>\n        <th>Temperature</th>\n        <td>{{payload.temperature}}°</td>\n    </tr>\n    <tr>\n        <th>Light</th>\n        <td>{{payload.light}} Lux</td>\n    </tr>\n    <tr>\n        <th>Moisture</th>\n        <td>{{payload.moisture}}%</td>\n    </tr>\n</table>",
         "output": "str",
         "x": 520,
-        "y": 680,
+        "y": 860,
         "wires": [
             [
-                "96fd5cce65a140f0"
+                "5884e92d2492ed4e"
             ]
         ]
     },
     {
-        "id": "2d146233ad078747",
+        "id": "f7014e62873d085b",
         "type": "comment",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Flower Data",
         "info": "",
         "x": 170,
-        "y": 600,
+        "y": 780,
         "wires": []
     },
     {
-        "id": "b3394c3077a2dd42",
+        "id": "bf426f2fc79d552d",
         "type": "mqtt in",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Read Weather Forecast",
         "topic": "data/weather",
         "qos": "2",
         "datatype": "json",
-        "broker": "dff86ddab56a7b73",
+        "broker": "67096fdec282d089",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
         "x": 200,
-        "y": 800,
+        "y": 980,
         "wires": [
             [
-                "63bd5329e7fa9073"
+                "dfad2363645b5aa3"
             ]
         ]
     },
     {
-        "id": "63bd5329e7fa9073",
+        "id": "dfad2363645b5aa3",
         "type": "template",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Prepare weather forecast table",
         "field": "payload",
         "fieldType": "msg",
@@ -490,20 +404,20 @@
         "template": "<table>\n    <tr>\n        <th>Date</th>\n        <th>Temperature</th>\n        <th>Details</th>\n    </tr>\n    {{#payload}}\n    <tr>\n        <th>{{date_formatted}}</th>\n        <td>{{min_emperature}}° / {{max_temperature}}°</td>\n        <td>{{detailed_status}}</td>\n    </tr>\n    {{/payload}}\n</table>",
         "output": "str",
         "x": 510,
-        "y": 800,
+        "y": 980,
         "wires": [
             [
-                "4b88d2d66bd0cf0b"
+                "28a068bd817737ac"
             ]
         ]
     },
     {
-        "id": "4b88d2d66bd0cf0b",
+        "id": "28a068bd817737ac",
         "type": "ui_template",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "group": "25130fe1.0492b",
         "name": "Weather forecast table",
-        "order": 1,
+        "order": 3,
         "width": "0",
         "height": "4",
         "format": "<style>\n    div.weather-forecast-table table {\n        border-collapse: separate;\n        border-spacing: 20px 0;\n    }\n\n    div.weather-forecast-table th {\n        text-align: left;\n    }\n    \n    div.weather-forecast-table th,\n    div.weather-forecast-table td {\n        padding: 5px 0;\n    }\n</style>\n\n<div class=\"weather-forecast-table\" ng-bind-html=\"msg.payload\"></div>",
@@ -513,28 +427,139 @@
         "templateScope": "local",
         "className": "",
         "x": 840,
-        "y": 800,
+        "y": 980,
         "wires": [
             []
         ]
     },
     {
-        "id": "07004b28d82e30ff",
+        "id": "3e01e9ba38244e81",
         "type": "pythonshell in",
-        "z": "8ec29985ea2dab43",
+        "z": "79444f954799b4fc",
         "name": "Run Script to produce weather forecast",
         "pyfile": "/home/pi/iot_project/weather_forecast.py",
         "virtualenv": "",
         "continuous": true,
         "stdInData": true,
         "x": 600,
-        "y": 80,
+        "y": 40,
         "wires": [
             []
         ]
     },
     {
-        "id": "37999371ba43323a",
+        "id": "9ea17bfb13273d9b",
+        "type": "pythonshell in",
+        "z": "79444f954799b4fc",
+        "name": "Run Script to monitor the motion sensor",
+        "pyfile": "/home/pi/iot_project/hue_motion_sensor.py",
+        "virtualenv": "",
+        "continuous": true,
+        "stdInData": true,
+        "x": 600,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c9ac80dafa3b8cf0",
+        "type": "mqtt in",
+        "z": "79444f954799b4fc",
+        "name": "Read Room data",
+        "topic": "sensor/room",
+        "qos": "2",
+        "datatype": "json",
+        "broker": "67096fdec282d089",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 560,
+        "wires": [
+            [
+                "f4bd25cd11a3892e"
+            ]
+        ]
+    },
+    {
+        "id": "ca95c390d024dced",
+        "type": "comment",
+        "z": "79444f954799b4fc",
+        "name": "Room Environment Data",
+        "info": "",
+        "x": 210,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "1509ff6aa5ad5f05",
+        "type": "ui_template",
+        "z": "79444f954799b4fc",
+        "group": "25130fe1.0492b",
+        "name": "Room Data",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n    div.room-data-table table {\n        border-collapse: separate;\n        border-spacing: 20px 0;\n    }\n\n    div.room-data-table th {\n        text-align: left;\n    }\n    \n    div.room-data-table th,\n    div.room-data-table td {\n        padding: 5px 0;\n    }\n</style>\n\n<div class=\"room-data-table\" ng-bind-html=\"msg.payload\"></div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 810,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f4bd25cd11a3892e",
+        "type": "template",
+        "z": "79444f954799b4fc",
+        "name": "Prepate data for ui",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<table>\n    <tr>\n        <th>Temperature</th>\n        <td>{{payload.temperature}}°</td>\n    </tr>\n    <tr>\n        <th>Humidity</th>\n        <td>{{payload.humidity}}%</td>\n    </tr>\n</table>",
+        "output": "str",
+        "x": 470,
+        "y": 560,
+        "wires": [
+            [
+                "1509ff6aa5ad5f05"
+            ]
+        ]
+    },
+    {
+        "id": "876c825e381e69cb",
+        "type": "pythonshell in",
+        "z": "79444f954799b4fc",
+        "name": "Run Script to monitor the room data",
+        "pyfile": "/home/pi/iot_project/room_monitor.py",
+        "virtualenv": "",
+        "continuous": true,
+        "stdInData": true,
+        "x": 590,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "655cf536ebb05e93",
+        "type": "comment",
+        "z": "79444f954799b4fc",
+        "name": "Weather Forecast",
+        "info": "",
+        "x": 180,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "8a2c35730178a731",
         "type": "ui_group",
         "name": "Hue Status",
         "tab": "ed6013cafe1ead89",
@@ -545,7 +570,7 @@
         "className": ""
     },
     {
-        "id": "dff86ddab56a7b73",
+        "id": "67096fdec282d089",
         "type": "mqtt-broker",
         "name": "Local Broker",
         "broker": "localhost",
@@ -573,16 +598,16 @@
     {
         "id": "25130fe1.0492b",
         "type": "ui_group",
-        "name": "Time",
+        "name": "Hue Status",
         "tab": "ed6013cafe1ead89",
         "order": 1,
-        "disp": false,
-        "width": "8",
+        "disp": true,
+        "width": "6",
         "collapse": false,
         "className": ""
     },
     {
-        "id": "d0816bc70fe54235",
+        "id": "86c81e86f697bdae",
         "type": "ui_group",
         "name": "Flower",
         "tab": "ed6013cafe1ead89",
