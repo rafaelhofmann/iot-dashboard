@@ -109,6 +109,9 @@ JSON format:
 ]
 ```
 
+### send_umbrella_reminder.py
+This file is responsible for sending a whatsapp message to the configured number with the reminder that the umbrella was forgotten.
+
 ## Used Libraries
 The following libraries were used for this project.
 | Library | Version | Use case |
@@ -118,8 +121,9 @@ The following libraries were used for this project.
 |`pyowm`|3.2.0|Library to read weather information from OpenWeatherMap (OWM). Used to check for rain and get the weather forecast.|
 |`phue`|1.1|Used to read the data from the Philipps Hue light system.|
 |`miflora`|0.7.1|Used to read sensor data from the Xiaomi Miflora plant sensor.|
-|`tensorflow`|2.5.0.post1|AI library to run object recognition on a webcam image with the aim to detect if an umbrella is present or not.|
+|`tflite_runtime`|2.5.0.post1|AI library to run object recognition on a webcam image with the aim to detect if an umbrella is present or not. Runtime/Light version of `tensorflow`|
 |`numpy`|1.16.2|Used to transform the image for `tensorflow`.|
 |`opencv`|4.1.0.25|Fetch the picture from the attached webcam.| 
 |`paho_mqtt`|1.6.1|MQTT library for Python|
 |`requests`|2.21.0|Library to execute HTTP requests|
+|`twilio`|7.4.0|Library to send whatsapp or sms|

@@ -1,6 +1,10 @@
 iot_dashboard:
   mqtt:
     hostname: "localhost"
+  twilio:
+    account_sid: "x"
+    auth_token: "x"
+    to_phone: "whatsapp:+x"
   hue:
     bridge: "x"
     username: "x"
@@ -16,7 +20,7 @@ iot_dashboard:
   weather_api:
     api_key: "x"
     topic: "data/weather"
-    refresh_intervall: 5
+    refresh_intervall: 300
     location:
       city: "x"
       country: "x"
