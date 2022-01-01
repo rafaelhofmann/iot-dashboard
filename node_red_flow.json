@@ -1,6 +1,6 @@
 [
     {
-        "id": "79444f954799b4fc",
+        "id": "70996d746a1f1f68",
         "type": "tab",
         "label": "IoT Dashboard",
         "disabled": false,
@@ -8,9 +8,9 @@
         "env": []
     },
     {
-        "id": "bcb1758c5e357b07",
+        "id": "55a4f014e5296ac2",
         "type": "ui_table",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "group": "8a2c35730178a731",
         "name": "Hue Status Table",
         "order": 1,
@@ -45,9 +45,9 @@
         "wires": []
     },
     {
-        "id": "50227ff9333b7b56",
+        "id": "5dc3430b39f15cf3",
         "type": "function",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Convert hue data for the ui table",
         "func": "var payload = msg.payload;\nfor (var i = 0; i < payload.length; i++) {\n    if (payload[i].state) {\n        payload[i].state = \"On\";\n    } else {\n        payload[i].state = \"Off\";\n    }\n}\nreturn msg;",
         "outputs": 1,
@@ -59,14 +59,14 @@
         "y": 680,
         "wires": [
             [
-                "bcb1758c5e357b07"
+                "55a4f014e5296ac2"
             ]
         ]
     },
     {
-        "id": "f75fb5491fc74f5b",
+        "id": "c81af5188319db02",
         "type": "mqtt in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Read Hue data",
         "topic": "sensor/hue/light",
         "qos": "2",
@@ -80,29 +80,29 @@
         "y": 680,
         "wires": [
             [
-                "50227ff9333b7b56"
+                "5dc3430b39f15cf3"
             ]
         ]
     },
     {
-        "id": "0b80a4a5a01f341c",
+        "id": "7cf686af984c8def",
         "type": "pythonshell in",
-        "z": "79444f954799b4fc",
-        "name": "Run Script to produce Hue Status",
+        "z": "70996d746a1f1f68",
+        "name": "Run Script to produce Hue Light Status",
         "pyfile": "/home/pi/iot_project/hue_light_status.py",
         "virtualenv": "",
         "continuous": true,
         "stdInData": true,
-        "x": 580,
+        "x": 600,
         "y": 100,
         "wires": [
             []
         ]
     },
     {
-        "id": "0154c3affbf9ce58",
+        "id": "448738080bf652b4",
         "type": "inject",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Inject Node to start pyhon scripts",
         "props": [
             {
@@ -123,18 +123,18 @@
         "y": 160,
         "wires": [
             [
-                "0b80a4a5a01f341c",
-                "3772d358c25d2c97",
-                "3e01e9ba38244e81",
-                "9ea17bfb13273d9b",
-                "876c825e381e69cb"
+                "7cf686af984c8def",
+                "1ee5ab04f055ddb0",
+                "b7dcf095007f24b6",
+                "c1285028b3dbf439",
+                "bdce640aa21db5de"
             ]
         ]
     },
     {
-        "id": "3772d358c25d2c97",
+        "id": "1ee5ab04f055ddb0",
         "type": "pythonshell in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Run Script to produce Flower Status",
         "pyfile": "/home/pi/iot_project/flower_status.py",
         "virtualenv": "",
@@ -147,9 +147,9 @@
         ]
     },
     {
-        "id": "9e5795e8f7bcf36f",
+        "id": "c4ec1a51d8190287",
         "type": "mqtt in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Read Flower data",
         "topic": "sensor/flower",
         "qos": "2",
@@ -163,15 +163,15 @@
         "y": 820,
         "wires": [
             [
-                "af76131e58a944c2",
-                "3f9f1d4ef71b147e"
+                "18e2c0dd12764fd0",
+                "43d2e7f20d87e46d"
             ]
         ]
     },
     {
-        "id": "b44f2349b03c1b0b",
+        "id": "6852be885e15e620",
         "type": "inject",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Inject time for clock",
         "props": [
             {
@@ -192,14 +192,14 @@
         "y": 460,
         "wires": [
             [
-                "f180849ffb47d17a"
+                "071deb92533ce0f8"
             ]
         ]
     },
     {
-        "id": "f180849ffb47d17a",
+        "id": "071deb92533ce0f8",
         "type": "function",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Convert timestamp to Date object",
         "func": "var currentDateTime = new Date(msg.payload);\n\nvar correctedMonth = currentDateTime.getMonth() + 1;\n\nvar day = currentDateTime.getDate() < 10 ? '0' + currentDateTime.getDate() : currentDateTime.getDate();\nvar month = correctedMonth < 10 ? '0' + correctedMonth : correctedMonth;\nvar year = currentDateTime.getFullYear();\n\nvar hours = currentDateTime.getHours() < 10 ? '0' + currentDateTime.getHours() : currentDateTime.getHours();\nvar minutes = currentDateTime.getMinutes() < 10 ? '0' + currentDateTime.getMinutes() : currentDateTime.getMinutes();\n\nmsg.payload = {\n    date: day + \".\" + month + \".\" + year,\n    time: hours + \":\" + minutes\n}\nreturn msg;",
         "outputs": 1,
@@ -211,14 +211,14 @@
         "y": 460,
         "wires": [
             [
-                "3392a4139f80abc6"
+                "088bc181f4c1e0ab"
             ]
         ]
     },
     {
-        "id": "3392a4139f80abc6",
+        "id": "088bc181f4c1e0ab",
         "type": "ui_template",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "group": "25130fe1.0492b",
         "name": "Date / Time",
         "order": 1,
@@ -237,9 +237,9 @@
         ]
     },
     {
-        "id": "fbc2e49350896ff8",
+        "id": "67ee2448eed8c6e6",
         "type": "comment",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Clock",
         "info": "",
         "x": 150,
@@ -247,9 +247,9 @@
         "wires": []
     },
     {
-        "id": "d88fc9961f351ac1",
+        "id": "23bec3ea5e8b2cdf",
         "type": "comment",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Start all Python scripts to generate data",
         "info": "",
         "x": 230,
@@ -257,9 +257,9 @@
         "wires": []
     },
     {
-        "id": "0126be1c0bde12e5",
+        "id": "9eb1ed1d63ec1b56",
         "type": "comment",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Hue Light Data",
         "info": "",
         "x": 180,
@@ -267,9 +267,9 @@
         "wires": []
     },
     {
-        "id": "e0287394654f936b",
+        "id": "36e47b68c5d024d8",
         "type": "ui_svg_graphics",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "group": "86c81e86f697bdae",
         "order": 1,
         "width": "6",
@@ -303,9 +303,9 @@
         ]
     },
     {
-        "id": "af76131e58a944c2",
+        "id": "18e2c0dd12764fd0",
         "type": "function",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Prepare data for SVG graphic",
         "func": "var colorValue;\nif (msg.payload.moisture >= 10) {\n    colorValue = \"#23A24D\";\n} else {\n    colorValue = \"#964B00\";\n}\n\nmsg.payload = {\n    \"command\": \"update_style\",\n    \"selector\": \".leaf\",\n    \"attributeName\": \"fill\",\n    \"attributeValue\": colorValue\n}\nmsg.topic = \"\";\nreturn msg;",
         "outputs": 1,
@@ -317,14 +317,14 @@
         "y": 780,
         "wires": [
             [
-                "e0287394654f936b"
+                "36e47b68c5d024d8"
             ]
         ]
     },
     {
-        "id": "5884e92d2492ed4e",
+        "id": "c5df01b3538fd8d8",
         "type": "ui_template",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "group": "86c81e86f697bdae",
         "name": "Plant Data Table",
         "order": 1,
@@ -343,9 +343,9 @@
         ]
     },
     {
-        "id": "3f9f1d4ef71b147e",
+        "id": "43d2e7f20d87e46d",
         "type": "template",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Prepate data for for plant data table",
         "field": "payload",
         "fieldType": "msg",
@@ -357,14 +357,14 @@
         "y": 860,
         "wires": [
             [
-                "5884e92d2492ed4e"
+                "c5df01b3538fd8d8"
             ]
         ]
     },
     {
-        "id": "f7014e62873d085b",
+        "id": "f65ab4058421e1e3",
         "type": "comment",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Flower Data",
         "info": "",
         "x": 170,
@@ -372,9 +372,9 @@
         "wires": []
     },
     {
-        "id": "bf426f2fc79d552d",
+        "id": "30143c116c2b6f85",
         "type": "mqtt in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Read Weather Forecast",
         "topic": "data/weather",
         "qos": "2",
@@ -388,14 +388,14 @@
         "y": 980,
         "wires": [
             [
-                "dfad2363645b5aa3"
+                "3af04b6513a2e0b5"
             ]
         ]
     },
     {
-        "id": "dfad2363645b5aa3",
+        "id": "3af04b6513a2e0b5",
         "type": "template",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Prepare weather forecast table",
         "field": "payload",
         "fieldType": "msg",
@@ -407,14 +407,14 @@
         "y": 980,
         "wires": [
             [
-                "28a068bd817737ac"
+                "8f2aeba719e3b8d1"
             ]
         ]
     },
     {
-        "id": "28a068bd817737ac",
+        "id": "8f2aeba719e3b8d1",
         "type": "ui_template",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "group": "25130fe1.0492b",
         "name": "Weather forecast table",
         "order": 3,
@@ -433,9 +433,9 @@
         ]
     },
     {
-        "id": "3e01e9ba38244e81",
+        "id": "b7dcf095007f24b6",
         "type": "pythonshell in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Run Script to produce weather forecast",
         "pyfile": "/home/pi/iot_project/weather_forecast.py",
         "virtualenv": "",
@@ -448,24 +448,24 @@
         ]
     },
     {
-        "id": "9ea17bfb13273d9b",
+        "id": "c1285028b3dbf439",
         "type": "pythonshell in",
-        "z": "79444f954799b4fc",
-        "name": "Run Script to monitor the motion sensor",
+        "z": "70996d746a1f1f68",
+        "name": "Run Script to monitor the Hue motion sensor",
         "pyfile": "/home/pi/iot_project/hue_motion_sensor.py",
         "virtualenv": "",
         "continuous": true,
         "stdInData": true,
-        "x": 600,
+        "x": 610,
         "y": 220,
         "wires": [
             []
         ]
     },
     {
-        "id": "c9ac80dafa3b8cf0",
+        "id": "960797b9b567ff86",
         "type": "mqtt in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Read Room data",
         "topic": "sensor/room",
         "qos": "2",
@@ -479,14 +479,14 @@
         "y": 560,
         "wires": [
             [
-                "f4bd25cd11a3892e"
+                "d69b8fe2eb1afc58"
             ]
         ]
     },
     {
-        "id": "ca95c390d024dced",
+        "id": "afd4528149e0817a",
         "type": "comment",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Room Environment Data",
         "info": "",
         "x": 210,
@@ -494,9 +494,9 @@
         "wires": []
     },
     {
-        "id": "1509ff6aa5ad5f05",
+        "id": "b46dda8da986f0e8",
         "type": "ui_template",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "group": "25130fe1.0492b",
         "name": "Room Data",
         "order": 2,
@@ -515,9 +515,9 @@
         ]
     },
     {
-        "id": "f4bd25cd11a3892e",
+        "id": "d69b8fe2eb1afc58",
         "type": "template",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Prepate data for ui",
         "field": "payload",
         "fieldType": "msg",
@@ -529,14 +529,14 @@
         "y": 560,
         "wires": [
             [
-                "1509ff6aa5ad5f05"
+                "b46dda8da986f0e8"
             ]
         ]
     },
     {
-        "id": "876c825e381e69cb",
+        "id": "bdce640aa21db5de",
         "type": "pythonshell in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Run Script to monitor the room data",
         "pyfile": "/home/pi/iot_project/room_monitor.py",
         "virtualenv": "",
@@ -549,9 +549,9 @@
         ]
     },
     {
-        "id": "655cf536ebb05e93",
+        "id": "b8fbba7e50d0d657",
         "type": "comment",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Weather Forecast",
         "info": "",
         "x": 180,
@@ -559,9 +559,9 @@
         "wires": []
     },
     {
-        "id": "9b28b7a1358a5228",
+        "id": "df4973a0274f510f",
         "type": "mqtt in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Wait for someone to leave the flat",
         "topic": "sensor/hue/motion",
         "qos": "2",
@@ -575,14 +575,14 @@
         "y": 1240,
         "wires": [
             [
-                "a930a1ef68fff400"
+                "d01b70e3b4205db5"
             ]
         ]
     },
     {
-        "id": "2961a3f76ce82ff7",
+        "id": "c565093c241ba0a7",
         "type": "comment",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Umbrella Reminder",
         "info": "",
         "x": 190,
@@ -590,147 +590,128 @@
         "wires": []
     },
     {
-        "id": "c6cb86693d59647a",
+        "id": "9906c5b353397a30",
         "type": "pythonshell in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Execute rain check",
         "pyfile": "/home/pi/iot_project/rain_check.py",
         "virtualenv": "",
         "continuous": false,
         "stdInData": false,
         "x": 870,
-        "y": 1200,
+        "y": 1240,
         "wires": [
             [
-                "117256a1a73a2e7e"
+                "1a8d3d73a6925f8c"
             ]
         ]
     },
     {
-        "id": "117256a1a73a2e7e",
+        "id": "1a8d3d73a6925f8c",
         "type": "json",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "",
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 1090,
-        "y": 1200,
+        "x": 1050,
+        "y": 1240,
         "wires": [
             [
-                "b4d0ddbcfdfb7cf5"
+                "23d70f955c194610"
             ]
         ]
     },
     {
-        "id": "b4d0ddbcfdfb7cf5",
+        "id": "23d70f955c194610",
         "type": "function",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Check for rain",
-        "func": "if (msg.payload.will_rain) {\n    msg.topic = \"rain_check\";\n    return msg;\n}",
+        "func": "if (msg.payload.will_rain) {\n    return msg;\n}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1260,
-        "y": 1200,
+        "x": 1220,
+        "y": 1240,
         "wires": [
             [
-                "78480904fe88ded3"
+                "78f7c2eb31f59d6d"
             ]
         ]
     },
     {
-        "id": "0b9b9cfa7fa628cf",
+        "id": "78f7c2eb31f59d6d",
         "type": "pythonshell in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Execute umbrella detection",
         "pyfile": "/home/pi/iot_project/umbrella_detection.py",
         "virtualenv": "",
         "continuous": false,
         "stdInData": false,
-        "x": 900,
-        "y": 1280,
-        "wires": [
-            [
-                "9d3ead6e17bdf13a"
-            ]
-        ]
-    },
-    {
-        "id": "78480904fe88ded3",
-        "type": "function",
-        "z": "79444f954799b4fc",
-        "name": "Wait for both inputs",
-        "func": "context.data = context.data || {};\n\nswitch (msg.topic) {\n    case \"umbrella_detection\":\n        context.data.umbrella_detection = msg.payload;\n        break;\n    case \"rain_check\":\n        context.data.rain_check = msg.payload;\n        break;\n}\n\nif (context.data.umbrella_detection != null && context.data.rain_check != null) {\n    context.data.umbrella_detection = null;\n    context.data.rain_check = null;\n    return {\n        payload: {\n            \"send_umbrella_reminder\": true\n        }\n    };\n}\n\nreturn null;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1510,
+        "x": 1480,
         "y": 1240,
         "wires": [
             [
-                "b0065fb8fc75527b"
+                "546c76306d2c9580"
             ]
         ]
     },
     {
-        "id": "9d3ead6e17bdf13a",
+        "id": "546c76306d2c9580",
         "type": "json",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "",
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 1090,
-        "y": 1280,
+        "x": 1690,
+        "y": 1240,
         "wires": [
             [
-                "794aa93c452b0808"
+                "5d10083503dce281"
             ]
         ]
     },
     {
-        "id": "794aa93c452b0808",
+        "id": "5d10083503dce281",
         "type": "function",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Check for an umbrella",
-        "func": "if (msg.payload.umbrella_detected) {\n    msg.topic = \"umbrella_detection\";\n    return msg;\n}",
+        "func": "if (msg.payload.umbrella_detected) {\n    return msg;\n}",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1280,
-        "y": 1280,
+        "x": 1880,
+        "y": 1240,
         "wires": [
             [
-                "78480904fe88ded3"
+                "d7d5a9000c718743"
             ]
         ]
     },
     {
-        "id": "b0065fb8fc75527b",
+        "id": "d7d5a9000c718743",
         "type": "pythonshell in",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Send Umbrella Reminder",
         "pyfile": "/home/pi/iot_project/send_umbrella_reminder.py",
         "virtualenv": "",
         "continuous": false,
         "stdInData": false,
-        "x": 1790,
+        "x": 2150,
         "y": 1240,
         "wires": [
             []
         ]
     },
     {
-        "id": "a930a1ef68fff400",
+        "id": "d01b70e3b4205db5",
         "type": "function",
-        "z": "79444f954799b4fc",
+        "z": "70996d746a1f1f68",
         "name": "Memory function to reduce notifications",
         "func": "var notificationDate = context.get(\"notification_date\");\n\nif (typeof (notificationDate) === 'undefined') {\n    context.set(\"notification_date\", new Date());\n    return msg;\n}\n\nvar currentDate = new Date();\nvar diff = Math.abs(notificationDate - currentDate);\nvar differenceInMinutes = Math.floor((diff / 1000) / 60);\n\nif (differenceInMinutes >= 5) {\n    context.set(\"notification_date\", currentDate);\n    return msg;\n} else {\n    return null;\n}\n",
         "outputs": 1,
@@ -742,8 +723,7 @@
         "y": 1240,
         "wires": [
             [
-                "0b9b9cfa7fa628cf",
-                "c6cb86693d59647a"
+                "9906c5b353397a30"
             ]
         ]
     },

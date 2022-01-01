@@ -1,12 +1,16 @@
 # IOT Dashboard
 ## Problem to solve
+With the COVID-19 pandemic, we were all forced to work from home. This brought a whole new set of new hobbies and problems with it, that we try to address with this IoT project.
 
 ## Devices
 ### Philipps Hue
+Philipps Hue is a system that consists of LED lamps, sensors, and switches. The system can be controlled manually using a Smartphone or can be automated, for example using Apple HomeKit.
 
 ### Xiaomi Miflora
+The Miflora is a wireless bluetooth sensor platform that allows to monitor the condition of plants. It monitors the moisture, ambient light, and temperature.
 
 ### Xiamoi Temperature and Humidity Monitor 2
+The Temperature and Humidity Monitor 2 is a small bluetooth device with an integrated display. It can display the room temperature and humidity.
 
 ## Files
 In the following sections all files and their use are described.
