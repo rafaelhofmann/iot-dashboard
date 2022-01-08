@@ -123,11 +123,7 @@
         "y": 160,
         "wires": [
             [
-                "7cf686af984c8def",
-                "1ee5ab04f055ddb0",
-                "b7dcf095007f24b6",
-                "c1285028b3dbf439",
-                "bdce640aa21db5de"
+                "1ee5ab04f055ddb0"
             ]
         ]
     },
@@ -253,7 +249,7 @@
         "name": "Start all Python scripts to generate data",
         "info": "",
         "x": 230,
-        "y": 120,
+        "y": 320,
         "wires": []
     },
     {
@@ -728,6 +724,119 @@
         ]
     },
     {
+        "id": "37fd1fc9e927d154",
+        "type": "inject",
+        "z": "70996d746a1f1f68",
+        "name": "Inject Node to start pyhon scripts",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 40,
+        "wires": [
+            [
+                "b7dcf095007f24b6"
+            ]
+        ]
+    },
+    {
+        "id": "252128c520c7df5f",
+        "type": "inject",
+        "z": "70996d746a1f1f68",
+        "name": "Inject Node to start pyhon scripts",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 100,
+        "wires": [
+            [
+                "7cf686af984c8def"
+            ]
+        ]
+    },
+    {
+        "id": "0273600efa28e7cd",
+        "type": "inject",
+        "z": "70996d746a1f1f68",
+        "d": true,
+        "name": "Inject Node to start pyhon scripts",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 220,
+        "wires": [
+            [
+                "c1285028b3dbf439"
+            ]
+        ]
+    },
+    {
+        "id": "60f4971cbb884838",
+        "type": "inject",
+        "z": "70996d746a1f1f68",
+        "name": "Inject Node to start pyhon scripts",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 280,
+        "wires": [
+            [
+                "bdce640aa21db5de"
+            ]
+        ]
+    },
+    {
         "id": "8a2c35730178a731",
         "type": "ui_group",
         "name": "Hue Status",
@@ -767,7 +876,7 @@
     {
         "id": "25130fe1.0492b",
         "type": "ui_group",
-        "name": "Hue Status",
+        "name": "Overview",
         "tab": "ed6013cafe1ead89",
         "order": 1,
         "disp": true,
