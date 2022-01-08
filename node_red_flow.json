@@ -14,8 +14,8 @@
         "group": "8a2c35730178a731",
         "name": "Hue Status Table",
         "order": 1,
-        "width": 0,
-        "height": 0,
+        "width": "4",
+        "height": "6",
         "columns": [
             {
                 "field": "name",
@@ -31,8 +31,8 @@
                 "field": "state",
                 "title": "State",
                 "width": "",
-                "align": "left",
-                "formatter": "plaintext",
+                "align": "center",
+                "formatter": "html",
                 "formatterParams": {
                     "target": "_blank"
                 }
@@ -49,7 +49,7 @@
         "type": "function",
         "z": "70996d746a1f1f68",
         "name": "Convert hue data for the ui table",
-        "func": "var payload = msg.payload;\nfor (var i = 0; i < payload.length; i++) {\n    if (payload[i].state) {\n        payload[i].state = \"On\";\n    } else {\n        payload[i].state = \"Off\";\n    }\n}\nreturn msg;",
+        "func": "var payload = msg.payload;\nfor (var i = 0; i < payload.length; i++) {\n    if (payload[i].state) {\n        payload[i].state = '<div style=\"background-color: green; font-weight: bold\">On</div>'\n    } else {\n        payload[i].state = '<div style=\"background-color: red; font-weight: bold;\">Off</div>';\n    }\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -500,8 +500,8 @@
         "group": "25130fe1.0492b",
         "name": "Room Data",
         "order": 2,
-        "width": 0,
-        "height": 0,
+        "width": "0",
+        "height": "0",
         "format": "<style>\n    div.room-data-table table {\n        border-collapse: separate;\n        border-spacing: 20px 0;\n    }\n\n    div.room-data-table th {\n        text-align: left;\n    }\n    \n    div.room-data-table th,\n    div.room-data-table td {\n        padding: 5px 0;\n    }\n</style>\n\n<div class=\"room-data-table\" ng-bind-html=\"msg.payload\"></div>",
         "storeOutMessages": true,
         "fwdInMessages": true,
