@@ -57,7 +57,7 @@ CAMERA_FRAME_RATE = 30
 # Because any COCO dataset is mainly trained with open umbrellas and not closed, we do have some slight issues here,
 # as our umbrella at home will always be closed.
 # So we become really (really) generous with what labels we accept as an umbrella.
-# Of course this increases the rate of error and we might recognize things as an umbrella that is really not an umbrella.
+# Of course this increases the rate of error and we might recognize things as an umbrella that are really not an umbrella.
 UMBRELLA_LABELS = ["umbrella", "tie", "vase", "suitcase"]
 
 CWD_PATH = os.getcwd()
@@ -89,9 +89,8 @@ time.sleep(1)
 # Grab frame from video stream
 original_frame = videostream.read()
 
-# Acquire frame and resize to expected shape [1xHxWx3]
+# Acquire frame and resize to expected shape
 frame = original_frame.copy()
-# frame = cv2.imread("test_umbrella.jpg")
 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 frame_resized = cv2.resize(frame_rgb, (width, height))
 input_data = np.expand_dims(frame_resized, axis=0)
@@ -101,7 +100,6 @@ interpreter.set_tensor(input_details[0]["index"], input_data)
 interpreter.invoke()
 
 # Retrieve detection results
-boxes = interpreter.get_tensor(output_details[0]["index"])[0]
 classes = interpreter.get_tensor(output_details[1]["index"])[0]
 scores = interpreter.get_tensor(output_details[2]["index"])[0]
 

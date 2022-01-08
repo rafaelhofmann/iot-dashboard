@@ -28,6 +28,5 @@ while True:
                 "detailed_status": weather.detailed_status,
             }
         )
-        print(forecasts)
     publish.single(config["topic"], json.dumps(forecasts), hostname=mqtt_config["hostname"])
     time.sleep(config["refresh_intervall"])
