@@ -44,7 +44,7 @@ JSON format:
 ```
 
 ### hue_light_status.py
-Reads the data from Philipps Hue light system and publishes the light groups with their `name` and `state` (`on`/`off`) data as a JSON object to a message queue in the topic `sensor/hue/light`.
+Reads the data from Philips Hue light system and publishes the light groups with their `name` and `state` (`on`/`off`) data as a JSON object to a message queue in the topic `sensor/hue/light`.
 JSON format:
 ```json
 [
@@ -58,6 +58,11 @@ JSON format:
   }
 ]
 ```
+
+### hue_light_control.py
+This script can turn Philips Hue lights on and off depending on their current light status.
+The script expects a json object as string as the first parameter where the group name is saved in the `name` property of the json object.
+The group name has to be converted to the interal Hue id to control the lights of the group.
 
 ### hue_motion_sensor.py
 Reads the motion sensor data from the Philipps Hue bridge and publishes the sensor information to MQTT with the information `presence_detected` to the topic `sensor/hue/motion`.

@@ -18,7 +18,6 @@ def fetch_presence():
 
 while True:
     presence = fetch_presence()
-    print("Presence: {}".format(presence))
     if presence == True:
         payload = {"presence_detected": True}
         publish.single(hue_motion_config["topic"], json.dumps(payload), hostname=mqtt_config["hostname"])
