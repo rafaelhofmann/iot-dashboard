@@ -3,8 +3,8 @@
 With the COVID-19 pandemic, we were all forced to work from home. This brought a whole new set of new hobbies and problems with it, that we try to address with this IoT project.
 
 ## Devices
-### Philipps Hue
-Philipps Hue is a system that consists of LED lamps, sensors, and switches. The system can be controlled manually using a Smartphone or can be automated, for example using Apple HomeKit.
+### Philips Hue
+Philips Hue is a system that consists of LED lamps, sensors, and switches. The system can be controlled manually using a Smartphone or can be automated, for example using Apple HomeKit.
 
 ### Xiaomi Miflora
 The Miflora is a wireless bluetooth sensor platform that allows to monitor the condition of plants. It monitors the moisture, ambient light, and temperature.
@@ -73,6 +73,9 @@ Reads the motion sensor data from the Philipps Hue bridge and publishes the sens
 }
 ```
 
+### mitemp_monitor2_poller.py
+Class that can read sensor data from a Xiaomi Temperature and Humidity Monitor 2 based on a `mac` address. Returns an object with the attributes `temperature` and `humidity`.
+
 ### node_red_flow.json
 This file contains the node-red flows that are used to build the dashboard and read the data.
 
@@ -86,13 +89,17 @@ JSON format:
 ```
 
 ### umbrella_detection.py
-Fetches one image from the attached webcam and executes an object recognition search using `tensorflow`. The result will be written to `stdout` for further processing in node-red.
+Fetches one image from the attached webcam and executes an object recognition search using `tensorflow`. A SSD model trained on the COCO dataset is used for the object recognition.
+The result will be written to `stdout` for further processing in node-red.
 JSON format:
 ```json
 {
   "umbrella_detected": true
 }
 ```
+
+### send_umbrella_reminder.py
+Python script that interacts with Twilio to send a Whatsapp message that reminds the user that he/she has forgotten the umbrella.
 
 ### weather_forecast.py
 Reads the weather data from `pyowm` and gets the forecast for the next 5 days. The output will be written to `stdout` for further processing in node-red.
@@ -117,9 +124,6 @@ JSON format:
   }
 ]
 ```
-
-### send_umbrella_reminder.py
-This file is responsible for sending a whatsapp message to the configured number with the reminder that the umbrella was forgotten.
 
 ## Used Libraries
 The following libraries were used for this project.
